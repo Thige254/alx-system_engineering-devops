@@ -1,2 +1,2 @@
 #!/bin/bash
-echo $PATH | TR ":" "\" | WC -lecho -n "$(< 6-first_line)" | wc -m
+echo $PATH | tr ':' '\n' | wc -l

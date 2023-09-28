@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Loop over all files and directories in the current directory
+# Displays part of the file name after the first dash(-)
 for file in *; do
     if [[ $file == *-* ]]; then
         echo "${file#*-}"

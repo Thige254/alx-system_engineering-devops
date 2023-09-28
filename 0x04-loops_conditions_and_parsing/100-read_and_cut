@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Reads the /etc/passwd file,extracts and displays the
+# Username, UserID, and Home Directory.
+
+while IFS= read -r line; do
+    username=$(echo "$line" | cut -d ':' -f 1)
+    userID=$(echo "$line" | cut -d ':' -f 3)
+    homeDirectory=$(echo "$line" | cut -d ':' -f 6)
+
+    echo "$username:$userID:$homeDirectory"
+done < /etc/passwd

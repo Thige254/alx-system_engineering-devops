@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# This script defines a function to handle SIGINT, creates PID file,
+# Defines a function to handle SIGTERM,etc
+
+echo "$$" > /var/run/myscript.pid
+
+terminate_handler() {
+    echo "I hate the kill command"
+    cleanup_and_exit
+}
+
+interrupt_handler() {
+    echo "Y U no love me?!"
+}
+
+quit_handler() {
+    cleanup_and_exit
+}
+
+cleanup_and_exit() {
+    rm -f /var/run/myscript.pid
+    exit 0
+}
+
+trap terminate_handler SIGTERM
+trap interrupt_handler SIGINT
+trap quit_handler SIGQUIT
+
+while true; do
+    echo "To infinity and beyond"
+    sleep 2
+done

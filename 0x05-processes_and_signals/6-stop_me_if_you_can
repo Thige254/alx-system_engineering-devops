@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Stop the 4-to_infinity_and_beyond process without using kill or killall.
+
+for pid in /proc/[0-9]*; do
+    if [[ -f "$pid/cmdline" && $(cat "$pid/cmdline") == *4-to_infinity_and_beyond* ]]; then
+        process_pid=$(basename "$pid")
+
+        echo -n "TERM" > "/proc/$process_pid/comm"
+    fi
+done

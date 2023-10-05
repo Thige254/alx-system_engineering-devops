@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Use 'ip' command to fetch IP addresses.
+# Filter out the IPv4 addresses.
+ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}'

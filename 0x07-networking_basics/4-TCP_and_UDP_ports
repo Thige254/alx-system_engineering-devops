@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Displays the listening ports,their PID and the program's name.
+
+echo "Currently Open Network Ports (Listen State Only)"
+ss -tulnep | grep 'LISTEN'
+echo ""
+echo "UNIX Domain Sockets in Listening State"
+ss -xlnep | grep 'LISTEN'

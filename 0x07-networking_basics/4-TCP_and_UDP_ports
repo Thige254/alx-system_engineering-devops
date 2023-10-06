@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Displays the listening ports,their PID and the program's name.
 
 echo "Currently Open Network Ports (Listen State Only)"

@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
-# Use 'ip' command to fetch IP addresses.Filter out the IPv4 addresses.
-ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}'
+# This script extracts and displays all active IPv4 addresses from the output of 'ifconfig'.
+# It first filters lines containing IPv4 addresses using 'grep', and then trims the extraneous
+# details to show only the IP addresses using 'cut'.
+ifconfig | grep -Eo "inet (addr:)?([0-9]*\.){3}[0-9]*" | cut -b 11-

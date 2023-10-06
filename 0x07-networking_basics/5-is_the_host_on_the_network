@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# This piece checks if an argument has been given
+# Check if an argument is provided
 if [ "$#" -ne 1 ]; then
     echo "Usage: $0 {IP_ADDRESS}"
     exit 1

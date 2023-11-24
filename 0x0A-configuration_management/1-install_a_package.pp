@@ -1,4 +1,4 @@
-# Puppet Manifest for installing Flask from pip3
+# Puppet Manifest for installing Flask with pip3
 
 package { 'Flask':
   ensure   => '2.1.0',
@@ -8,4 +8,5 @@ package { 'Flask':
 
 package { 'python3-pip':
   ensure => 'latest',
+  provider => 'apt',
 }

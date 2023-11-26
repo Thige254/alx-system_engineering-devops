@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# This is just a hypothetical setup
+Host my_server_name
+    HostName my_hostname
+    User my_server_username
+    IdentityFile ~/.ssh/school
+    PreferredAuthentications publickey
+    PasswordAuthentication no

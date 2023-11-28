@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# This script fixes the web stack.It creates a Dockerfile and
+# configurtes Apache to return a page containing "Hello Holberton" when querying the root.
+
+# Create Dockerfile
+echo -e "FROM ubuntu:14.04\n\
+RUN apt-get update -y\n\
+RUN apt-get install -y apache2\n\
+COPY index.html /var/www/html/\n\
+EXPOSE 80\n\
+CMD [\"apache2ctl\", \"-D\", \"FOREGROUND\"]" > Dockerfile
+
+# Create index.html
+echo "Hello Holberton" > index.html
+
+# Build the Docker image
+docker build -t holbertonschool/265-0 .
+
+# Run the Docker container
+docker run -p 8080:80 -d -it holbertonschool/265-0

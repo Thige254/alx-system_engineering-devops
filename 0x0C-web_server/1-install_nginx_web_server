@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Install nginx with the -y flag for non-interactive installation
+sudo apt-get update
+sudo apt-get install -y nginx
+
+# Configure nginx to listen on port 80
+sudo sed -i 's/^\(.*listen \)80;/\180;/' /etc/nginx/sites-available/default
+
+# Restart nginx without using systemctl
+sudo /etc/init.d/nginx restart
+
+# Create an HTML file with "Hello World!"
+echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
+
+# Output success message
+echo "Nginx installed and configured. Hello World page created."

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# This script configures Nginx on a new Ubuntu machine
+
+# Update the package list and install Nginx
+sudo apt-get update
+sudo apt-get install -y nginx
+
+# Get the hostname of the machine
+hostname=$(hostname)
+
+# Configure Nginx to include the custom header
+sudo bash -c "echo 'add_header X-Served-By $hostname;' >> /etc/nginx/sites-available/default"
+
+# Reload Nginx to apply the changes
+sudo service nginx reload

@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Script to display information about subdomains
+
+# Function to get the IP address of a subdomain
+get_ip() {
+    dig +short "$1" | tail -n1
+}
+
+# Function to display information about a subdomain
+display_info() {
+    local sub_domain="$1"
+    local record_type="$2"
+    local destination="$3"
+    echo "The subdomain $sub_domain is a $record_type record and points to $destination"
+}
+
+# Main script
+if [ "$#" -eq 1 ]; then
+    # If only domain is provided, display information for default subdomains
+    domain="$1"
+    subdomains=("www" "lb-01" "web-01" "web-02")
+
+    for sub in "${subdomains[@]}"; do
+        ip=$(get_ip "$sub.$domain")
+        [ -n "$ip" ] && display_info "$sub" "A" "$ip"
+    done
+elif [ "$#" -eq 2 ]; then
+# If both domain and subdomain are provided,
+# display information for the specified subdomain
+    domain="$1"
+    sub_domain="$2"
+    ip=$(get_ip "$sub_domain.$domain")
+    [ -n "$ip" ] && display_info "$sub_domain" "A" "$ip"
+else
+    # Incorrect number of arguments
+    echo "Usage: $0 <domain> [subdomain]"
+    exit 1
+fi

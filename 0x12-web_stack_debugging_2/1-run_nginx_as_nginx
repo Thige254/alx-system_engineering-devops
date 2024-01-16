@@ -1,23 +1,16 @@
 #!/usr/bin/env bash
-# This script configures the container to run Nginx as the nginx user,
-# listening on all active IPs on port 8080.
+# This Bash script manages the NGINX web server configuration.
+# It stops the Apache2 server, updates NGINX to listen on port 8080,
+# adjusts permissions on the NGINX configuration file, and restarts NGINX.
 
-# Install necessary packages (if not already installed)
-apt-get update
-apt-get install -y nginx
+# Stop the Apache2 server to avoid port conflicts.
+pkill apache2
 
-# Backup the default Nginx configuration
-cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
+# Configure NGINX to listen on port 8080
+sed -i 's/80/8080/g' /etc/nginx/sites-available/default
 
-# Configure Nginx to run as nginx user
-sed -i 's/user\s*www-data;/user nginx;/' /etc/nginx/nginx.conf
+# Adjust permissions on the NGINX configuration file for security.
+chmod 644 /etc/nginx/nginx.conf
 
-# Configure Nginx to listen on all active IPs on port 8080
-sed -i '/listen\s*80;/a listen 8080;' /etc/nginx/nginx.conf
-
-# Restart Nginx to apply changes
-service nginx restart
-
-# Check the Nginx processes and port 8080
-pgrep -f nginx
-nc -z 0 8080
+# Restart NGINX with the updated configuration.
+sudo -u nginx service nginx restart

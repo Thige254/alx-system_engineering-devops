@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
-# This script fixes the web stack.It creates a Dockerfile and
-# configurtes Apache to return a page containing "Hello Holberton" when querying the root.
+# This script fixes the web stack. It creates a Dockerfile and
+# configures Apache to return a page containing "Hello Holberton" when querying the root.
+
+# Start Docker daemon
+sudo service docker start
+
+# Wait for Docker daemon to start
+while ! docker info &> /dev/null; do
+    sleep 1
+done
 
 # Create Dockerfile
 echo -e "FROM ubuntu:14.04\n\
@@ -18,3 +26,10 @@ docker build -t holbertonschool/265-0 .
 
 # Run the Docker container
 docker run -p 8080:80 -d -it holbertonschool/265-0
+
+# Check if Apache2 is running
+if docker exec "$(docker ps -q)" ps aux | grep -q "[a]pache2"; then
+    echo "apache2 is running"
+else
+    echo "Error: apache2 is not running"
+fi

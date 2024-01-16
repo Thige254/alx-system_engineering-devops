@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
-# This script configures an NGINX server to listen on port 80.
+# This script fixes NGINX to listen on port 80.
 
-# Create a symbolic link between the NGINX default configuration file
-# and the directory of enabled sites. This is a common practice to manage
-# multiple site configurations effectively.
-ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+# Create a symbolic link to the NGINX default configuration file.
+ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 # Restart the NGINX service to apply the new configuration.
 service nginx restart
-
-# Terminate the first NGINX process ID to ensure a clean restart.
-kill "$(pgrep 'nginx' | head -n 1)"

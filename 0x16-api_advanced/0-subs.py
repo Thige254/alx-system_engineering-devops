@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-0-subs
+0-subs function queries Reddit API and returns the number of subscribers
 """
 import requests
 

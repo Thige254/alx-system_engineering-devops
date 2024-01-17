@@ -11,8 +11,11 @@ sudo ufw allow 22/tcp
 sudo ufw allow 443/tcp
 sudo ufw allow 80/tcp
 
-# Block all incoming traffic by default
+# Deny all other incoming traffic by default
 sudo ufw default deny incoming
+
+# Allow outgoing traffic by default
+sudo ufw default allow outgoing
 
 # Enable the ufw firewall
 sudo ufw enable

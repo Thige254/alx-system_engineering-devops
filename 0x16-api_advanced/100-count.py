@@ -10,10 +10,8 @@ def count_words(subreddit, word_list, after=None, counts=None):
     Recursively queries the Reddit API, parses the titles of all hot articles,
     and prints a sorted count of given keywords.
     """
-    if after is None:
-        url = f'https://www.reddit.com/r/{subreddit}/hot.json'
-    else:
-        url = f'https://www.reddit.com/r/{subreddit}/hot.json?after={after}'
+    url_base = f'https://www.reddit.com/r/{subreddit}/hot.json'
+    url = url_base if after is None else f'{url_base}?after={after}'
 
     headers = {'User-Agent': 'custom-user-agent'}
 
@@ -36,12 +34,23 @@ def count_words(subreddit, word_list, after=None, counts=None):
 
             if after:
                 return count_words(subreddit, word_list, after, counts)
+            elif not counts:
+                print("No posts matched the given keywords.")
             else:
                 print_results(counts)
+        elif response.status_code == 404:
+            error_message = (
+                f"Error: Subreddit '{subreddit}' not found."
+            )
+            print(error_message)
         else:
-            print("None")
+            error_message = (
+                f"Error: Unable to fetch data from Reddit. "
+                f"Status code: {response.status_code}"
+            )
+            print(error_message)
     except Exception as e:
-        print("None")
+        print(f"Error: {str(e)}")
 
 
 def print_results(counts):

@@ -1,11 +1,20 @@
-#!/usr/bin/env bash
-# Set up the ufw firewall to block all incoming traffic.
+#!/bin/bash
+# Flush existing rules and set default policies
+sudo iptables -F
+sudo iptables -P INPUT ACCEPT
+sudo iptables -P FORWARD ACCEPT
+sudo iptables -P OUTPUT ACCEPT
 
-sudo apt install ufw
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw allow 22/tcp
-sudo ufw allow 443/tcp
-sudo ufw allow 80/tcp
-sudo ufw enable
-sudo ufw status verbose
+# Enable IP forwarding
+echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
+
+# Port forwarding from 8080 to 80
+sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
+
+# Save the rules
+sudo iptables-save | sudo tee /etc/iptables.rules
+
+# Apply the rules on boot
+echo '#!/bin/sh' | sudo tee /etc/network/if-pre-up.d/iptables
+echo 'iptables-restore < /etc/iptables.rules' | sudo tee -a /etc/network/if-pre-up.d/iptables
+sudo chmod +x /etc/network/if-pre-up.d/iptables

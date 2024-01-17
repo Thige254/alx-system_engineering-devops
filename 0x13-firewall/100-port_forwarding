@@ -1,20 +1,20 @@
 #!/bin/bash
+# Flush existing rules and set default policies
+sudo iptables -F
+sudo iptables -P INPUT ACCEPT
+sudo iptables -P FORWARD ACCEPT
+sudo iptables -P OUTPUT ACCEPT
 
-# Open the ufw configuration file for editing
-sudo nano /etc/ufw/before.rules
+# Enable IP forwarding
+sudo echo 1 > /proc/sys/net/ipv4/ip_forward
 
-# Add the following lines at the beginning of the file to forward traffic from port 8080 to port 80
-# Note: Ensure that these lines are added before the *filter section in the file
+# Port forwarding from 8080 to 80
+sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
 
-*nat
-:PREROUTING ACCEPT [0:0]
--A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
-COMMIT
+# Save the rules
+sudo iptables-save > /etc/iptables.rules
 
-# Save the changes and exit the text editor
-
-# Check if the syntax of the ufw configuration is correct
-sudo ufw status
-
-# If there are no errors, reload ufw to apply the changes
-sudo ufw reload
+# Apply the rules on boot
+sudo echo '#!/bin/sh' > /etc/network/if-pre-up.d/iptables
+sudo echo 'iptables-restore < /etc/iptables.rules' >> /etc/network/if-pre-up.d/iptables
+sudo chmod +x /etc/network/if-pre-up.d/iptables

@@ -39,10 +39,7 @@ def count_words(subreddit, word_list, after=None, counts=None):
             else:
                 print_results(counts)
         elif response.status_code == 404:
-            error_message = (
-                f"Error: Subreddit '{subreddit}' not found."
-            )
-            print(error_message)
+            print(f"Error: Subreddit '{subreddit}' not found.")
         else:
             error_message = (
                 f"Error: Unable to fetch data from Reddit. "
@@ -57,6 +54,9 @@ def print_results(counts):
     """
     Prints results in descending order by count and alphabetically.
     """
+    if not counts:
+        return
+
     sorted_counts = sorted(counts.items(), key=lambda x: (-x[1], x[0]))
     for word, count in sorted_counts:
         print(f"{word}: {count}")

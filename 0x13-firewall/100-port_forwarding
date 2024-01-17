@@ -6,15 +6,15 @@ sudo iptables -P FORWARD ACCEPT
 sudo iptables -P OUTPUT ACCEPT
 
 # Enable IP forwarding
-sudo echo 1 > /proc/sys/net/ipv4/ip_forward
+echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
 
 # Port forwarding from 8080 to 80
 sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
 
 # Save the rules
-sudo iptables-save > /etc/iptables.rules
+sudo iptables-save | sudo tee /etc/iptables.rules
 
 # Apply the rules on boot
-sudo echo '#!/bin/sh' > /etc/network/if-pre-up.d/iptables
-sudo echo 'iptables-restore < /etc/iptables.rules' >> /etc/network/if-pre-up.d/iptables
+echo '#!/bin/sh' | sudo tee /etc/network/if-pre-up.d/iptables
+echo 'iptables-restore < /etc/iptables.rules' | sudo tee -a /etc/network/if-pre-up.d/iptables
 sudo chmod +x /etc/network/if-pre-up.d/iptables

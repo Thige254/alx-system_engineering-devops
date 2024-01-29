@@ -1,25 +1,25 @@
 #!/usr/bin/env bash
-# Install Nginx
+
+# Install nginx with the -y flag for non-interactive installation
 sudo apt-get update
 sudo apt-get install -y nginx
 
-# Create a configuration file for the redirection
-echo "server {
-    listen 80;
-    listen [::]:80;
+# Configure nginx to listen on port 80
+sudo sed -i 's/^\(.*listen \)80;/\180;/' /etc/nginx/sites-available/default
 
-    server_name _;
+# Restart nginx without using systemctl
+sudo /etc/init.d/nginx restart
 
-    location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-    }
+# Create an HTML file with "Hello World!"
+echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
 
-    # Additional server configurations...
+# Configure redirection for /redirect_me
+echo "location /redirect_me {
+    return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+}" | sudo tee -a /etc/nginx/sites-available/default > /dev/null
 
-}" | sudo tee /etc/nginx/sites-available/redirect_me
+# Restart nginx to apply changes
+sudo /etc/init.d/nginx restart
 
-# Create a symbolic link to enable the configuration
-sudo ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
-
-# Test Nginx configuration and restart
-sudo nginx -t && sudo service nginx restart
+# Output success message
+echo "Nginx installed and configured. Hello World page created. Redirection configured."

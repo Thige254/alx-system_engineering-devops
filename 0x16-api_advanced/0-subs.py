@@ -18,16 +18,20 @@ def number_of_subscribers(subreddit):
 
         # Check for redirection
         if response.status_code == 302:
+            print("0")
             return 0
 
         # Check for successful response
         if response.status_code == 200:
             data = response.json().get('data')
             if data:
+                print("OK")
                 return data.get('subscribers', 0)
 
+        print("0")
         return 0
     except Exception as e:
+        print("0")
         return 0
 
 

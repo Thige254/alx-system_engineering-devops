@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
+
 # Install Nginx with the -y flag for non-interactive installation
 sudo apt-get update
 sudo apt-get install -y nginx
 
 # Create an HTML file for the custom 404 page
-echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html > /dev/null
+echo "<!DOCTYPE html>
+<html>
+<head>
+    <title>404 Not Found</title>
+</head>
+<body>
+    <h1>Ceci n'est pas une page.</h1>
+</body>
+</html>" | sudo tee /var/www/html/404.html > /dev/null
 
 # Create a configuration file for the custom 404 page
 echo "server {

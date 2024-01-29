@@ -15,10 +15,17 @@ def number_of_subscribers(subreddit):
 
     try:
         response = requests.get(url, headers=headers, allow_redirects=False)
+
+        # Check for redirection
+        if response.status_code == 302:
+            return 0
+
+        # Check for successful response
         if response.status_code == 200:
             data = response.json().get('data')
             if data:
                 return data.get('subscribers', 0)
+
         return 0
     except Exception as e:
         return 0

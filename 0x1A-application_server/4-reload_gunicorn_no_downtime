@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 # This script gracefully reloads Gunicorn without downtime
 
-echo "Before Reload:"
-pgrep -f '[g]unicorn'
-
 # Gracefully reload Gunicorn by sending a HUP signal to the master
 pkill -HUP -f '[g]unicorn'
 
-# Add "OK" to satisfy the checker's expectations
-echo "OK"
-
-echo "After Reload:"
-pgrep -f '[g]unicorn'
+# Check if the reload was successful
+if [ $? -eq 0 ]; then
+    echo "OK"
+else
+    echo "Reload Failed"
+fi

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Script reloads Gunicorn gracefully. No downtime buddy.
+
+# Get the process IDs (PIDs) of the Gunicorn master and workers
+master_pid=$(ps auxf | grep '[g]unicorn' | grep 'master' | awk '{print $2}')
+worker_pids=$(ps auxf | grep '[g]unicorn' | grep 'worker' | awk '{print $2}')
+
+# Print the current status
+echo "Before Reload:"
+ps auxf | grep '[g]unicorn'
+
+# Gracefully reload Gunicorn by sending a HUP signal to the master
+kill -s HUP $master_pid
+
+# Wait for the master to complete the reload
+sleep 2
+
+# Print the status after reload
+echo "After Reload:"
+ps auxf | grep '[g]unicorn'

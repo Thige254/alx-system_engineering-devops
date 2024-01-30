@@ -5,7 +5,7 @@
 pkill -HUP -f '[g]unicorn'
 
 # Check if the reload was successful
-if [ $? -eq 0 ]; then
+if pkill -0 -f '[g]unicorn'; then
     echo "OK"
 else
     echo "Reload Failed"

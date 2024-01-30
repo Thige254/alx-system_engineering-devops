@@ -2,13 +2,19 @@
 # This script gracefully reloads Gunicorn without downtime
 
 echo "Before Reload:"
-ps auxf | grep '[g]unicorn'
+pgrep '[g]unicorn'
+
+# Get the master PID
+master_pid=$(pgrep -o -f '[g]unicorn master')
 
 # Gracefully reload Gunicorn by sending a HUP signal to the master
-pkill -HUP -f '[g]unicorn'
+pkill -HUP -P "$master_pid"
+
+# Wait for a moment to let the reload happen
+sleep 2
 
 echo "After Reload:"
-ps auxf | grep '[g]unicorn'
+pgrep '[g]unicorn'
 
 # Check if the reload was successful
 if pgrep -fx '[g]unicorn' > /dev/null; then

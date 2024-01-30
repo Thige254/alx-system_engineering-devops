@@ -2,14 +2,14 @@
 # This script gracefully reloads Gunicorn without downtime
 
 echo "Before Reload:"
-ps auxf | grep '[g]unicorn'
+pgrep -f '[g]unicorn'
 
 # Gracefully reload Gunicorn by sending a HUP signal to the master
 pkill -HUP -f '[g]unicorn'
 
-# Check if Gunicorn is still running after reload
-if pgrep -f '[g]unicorn'; then
-  echo "OK"
+echo "After Reload:"
+if pgrep -f '[g]unicorn' > /dev/null; then
+    echo "OK"
 else
-  echo "Reload Failed"
+    echo "Reload Failed"
 fi

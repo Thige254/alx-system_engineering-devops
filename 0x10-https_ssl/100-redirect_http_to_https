@@ -1,0 +1,45 @@
+# /etc/haproxy/100-redirect_http_to_https
+
+global
+    log /dev/log local0
+    maxconn 2048
+    user haproxy
+    group haproxy
+    tune.ssl.default-dh-param 2048
+
+defaults
+    log global
+    mode http
+    option httplog
+    option dontlognull
+
+frontend http_front
+    bind *:80
+    mode http
+    option forwardfor
+    option http-server-close
+    option http-pretend-keepalive
+
+    acl is_http hdr_beg(host) -i www
+    redirect scheme https if is_http
+
+frontend https_front
+    bind *:443 ssl crt /fictional/path/to/my/ssl/certificate.pem
+    mode http
+    option forwardfor
+    option http-server-close
+    option http-pretend-keepalive
+
+    # SSL settings...
+
+    default_backend www_backend
+
+backend www_backend
+    mode http
+    option forwardfor
+    option http-server-close
+    option http-pretend-keepalive
+
+    # backend server configurations...
+
+    server backend-server 127.0.0.1:8080 check

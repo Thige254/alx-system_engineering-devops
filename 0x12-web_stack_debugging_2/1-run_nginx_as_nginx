@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# This Bash script manages the NGINX web server configuration.
+# It stops the Apache2 server, updates NGINX to listen on port 8080,
+# adjusts permissions on the NGINX configuration file, and restarts NGINX.
+
+# Stop the Apache2 server to avoid port conflicts.
+pkill apache2
+
+# Configure NGINX to listen on port 8080
+sed -i 's/80/8080/g' /etc/nginx/sites-available/default
+
+# Adjust permissions on the NGINX configuration file for security.
+chmod 644 /etc/nginx/nginx.conf
+
+# Restart NGINX with the updated configuration.
+sudo -u nginx service nginx restart

@@ -1,35 +1,38 @@
 #!/usr/bin/python3
-"""function that queries Reddit API n prints titles of first 10 hot posts"""
-import requests
+"""
+Module to print titles offirst 10 hot posts listed for a given subreddit
+"""
+
+from requests import get
 
 
 def top_ten(subreddit):
     """
-    Prints the titles of the first 10 hot posts for a given subreddit.
-    If not a valid subreddit, prints None.
+    Queries the Reddit API and prints the titles of the first
+    10 hot posts listed for a given subreddit.
+
+    Args:
+        subreddit: A string representing the name of the subreddit.
+
+    Returns:
+        None
     """
-    url = f'https://www.reddit.com/r/{subreddit}/hot.json?limit=10'
-    headers = {'User-Agent': 'custom-user-agent'}
+
+    if subreddit is None or not isinstance(subreddit, str):
+        print("None")
+
+    user_agent = {'User-agent': 'Google Chrome Version 81.0.4044.129'}
+    params = {'limit': 10}
+    url = 'https://www.reddit.com/r/{}/hot/.json'.format(subreddit)
+
+    response = get(url, headers=user_agent, params=params)
+    results = response.json()
 
     try:
-        response = requests.get(url, headers=headers, allow_redirects=False)
-        if response.status_code == 200:
-            data = response.json().get('data', {}).get('children', [])
-            if data:
-                for post in data:
-                    print(post.get('data', {}).get('title'))
-            else:
-                print("No posts found.")
-        else:
-            print(None)
-    except Exception as e:
-        print(None)
+        my_data = results.get('data').get('children')
 
+        for i in my_data:
+            print(i.get('data').get('title'))
 
-if __name__ == '__main__':
-    import sys
-
-    if len(sys.argv) < 2:
-        print("Please pass an argument for the subreddit to search.")
-    else:
-        top_ten(sys.argv[1])
+    except Exception:
+        print("None")

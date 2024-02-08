@@ -1,16 +1,21 @@
 #!/usr/bin/env bash
-# Install nginx with the -y flag for non-interactive installation
-sudo apt-get update
-sudo apt-get install -y nginx
+# Script to install and configure Nginx web server
 
-# Configure nginx to listen on port 80
-sudo sed -i 's/^\(.*listen \)80;/\180;/' /etc/nginx/sites-available/default
+# Check if running as root
+if [ "$(id -u)" -ne 0 ]; then
+    echo "Please run this script with sudo."
+    exit 1
+fi
 
-# Restart nginx without using systemctl
-sudo /etc/init.d/nginx restart
+# Install Nginx
+apt-get update -y
+apt-get install nginx -y
 
-# Create an HTML file with "Hello World!"
-echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
+# Configure Nginx to listen on port 80
+sed -i 's/listen 80 default_server;/listen 80;/g' /etc/nginx/sites-available/default
 
-# Output success message
-echo "Nginx installed and configured. Hello World page created."
+# Configure Nginx to return "Hello World!" at the root
+echo "Hello World!" > /var/www/html/index.html
+
+# Restart Nginx
+service nginx restart

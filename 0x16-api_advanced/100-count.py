@@ -12,7 +12,7 @@ def count_words(subreddit, word_list, after="", count=[]):
     Args:
         subreddit: A string representing the name of the subreddit.
         word_list: A list of strings containing words to count occurrences of.
-        after: A string representing last post identifier in pagination.
+        after: string representing last post identifier in the pagination.
         count: A list to store the counts of each word.
 
     Returns:
@@ -22,10 +22,11 @@ def count_words(subreddit, word_list, after="", count=[]):
         count = [0] * len(word_list)
 
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    headers = {'User-Agent': 'thige'}  # Adjusted User-Agent
     request = requests.get(url,
                            params={'after': after},
                            allow_redirects=False,
-                           headers={'user-agent': 'bhalut'})
+                           headers=headers)
 
     if request.status_code == 200:
         data = request.json()

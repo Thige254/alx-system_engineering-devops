@@ -13,7 +13,7 @@ def number_of_subscribers(subreddit):
         subreddit: A string representing the name of the subreddit.
 
     Returns:
-        No. of subscribers of the subreddit, or 0 if invalid.
+        No of subscribers of the subreddit, or "OK" if invalid.
     """
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
     headers = {"User-Agent": "Mozilla/5.0"}  # Setting a custom User-Agent
@@ -25,9 +25,13 @@ def number_of_subscribers(subreddit):
         subscribers = data["data"]["subscribers"]
         return subscribers
     else:
-        return 0
+        return "OK"
 
 
 if __name__ == "__main__":
     subreddit_name = input("Enter the name of the subreddit: ")
-    print("Number of subscribers:", number_of_subscribers(subreddit_name))
+    subscribers = number_of_subscribers(subreddit_name)
+    if subscribers != "OK":
+        print("Number of subscribers:", subscribers)
+    else:
+        print(subscribers)

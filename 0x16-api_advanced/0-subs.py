@@ -1,45 +1,32 @@
 #!/usr/bin/python3
 """
-0-subs function queries Reddit API and returns the number of subscribers
+Module to query the Reddit API for no.of subscribers of a subreddit.
 """
 import requests
 
 
 def number_of_subscribers(subreddit):
     """
-    Returns the number of subscribers for a given subreddit.
-    If not a valid subreddit, returns 0.
+    Queries the Reddit API for no. of subscribers of a subreddit.
+
+    Args:
+        subreddit: A string representing the name of the subreddit.
+
+    Returns:
+        No.of subscribers of the subreddit, or 0 if invalid.
     """
-    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
-    headers = {'User-Agent': 'custom-user-agent'}
+    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
+    headers = {"User-Agent": "Mozilla/5.0"}
+    response = requests.get(url, headers=headers)
 
-    try:
-        response = requests.get(url, headers=headers, allow_redirects=False)
-
-        # Check for successful response
-        if response.status_code == 200:
-            data = response.json().get('data')
-            if data:
-                print("OK")
-                return data.get('subscribers', 0)
-
-        # Check for redirection
-        if response.status_code == 302:
-            print("0")
-            return 0
-
-        print("0")
-        return 0
-    except Exception as e:
-        print("0")
-        return 0
-
-
-if __name__ == '__main__':
-    import sys
-
-    if len(sys.argv) < 2:
-        print("Please pass an argument for the subreddit to search.")
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        data = response.json()
+        return data["data"]["subscribers"]
     else:
-        subscribers_count = number_of_subscribers(sys.argv[1])
-        print("{:d}".format(subscribers_count))
+        return 0
+
+
+if __name__ == "__main__":
+    subreddit_name = input("Enter the name of the subreddit: ")
+    print("Number of subscribers:", number_of_subscribers(subreddit_name))

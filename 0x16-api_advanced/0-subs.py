@@ -1,32 +1,19 @@
 #!/usr/bin/python3
 """
-Module to query the Reddit API for no.of subscribers of a subreddit.
+The Script queries  no.of subscribers on a given Reddit subreddit.
 """
+
 import requests
 
 
 def number_of_subscribers(subreddit):
-    """
-    Queries the Reddit API for no. of subscribers of a subreddit.
-
-    Args:
-        subreddit: A string representing the name of the subreddit.
-
-    Returns:
-        No.of subscribers of the subreddit, or 0 if invalid.
-    """
+    """Return total no. of subscribers on a given subreddit."""
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
     headers = {"User-Agent": "Mozilla/5.0"}
-    response = requests.get(url, headers=headers)
-
-    # Check if the request was successful (status code 200)
+    response = requests.get(url, headers=headers, allow_redirects=False)
     if response.status_code == 200:
         data = response.json()
-        return data["data"]["subscribers"]
+        subscribers = data['data']['subscribers']
+        return subscribers
     else:
         return 0
-
-
-if __name__ == "__main__":
-    subreddit_name = input("Enter the name of the subreddit: ")
-    print("Number of subscribers:", number_of_subscribers(subreddit_name))

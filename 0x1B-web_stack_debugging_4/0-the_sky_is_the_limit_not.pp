@@ -1,16 +1,54 @@
-# Increases the amount of traffic an Nginx server can handle.
+# Puppet manifest to optimize Nginx configuration
 
-# Increase the ULIMIT of the default file
-exec { 'fix-for-nginx':
-  command => '/bin/sed -i "s/15/4096/" /etc/default/nginx',
-  # Specify the path for the sed command
-  path    => '/usr/local/bin:/bin/',
+# Adjust worker_processes and worker_connections based on server resources
+file { '/etc/nginx/nginx.conf':
+  ensure  => file,
+  content => "
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+
+events {
+    worker_connections 1024;
+    # multi_accept on;
 }
 
-# Restart Nginx
-exec { 'nginx-restart':
-  # Restart Nginx service command
-  command => '/etc/init.d/nginx restart',
-  # Specify the path for the init.d script
-  path    => '/etc/init.d/',
+http {
+    ##
+    # Basic Settings
+    ##
+
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    ##
+    # Logging Settings
+    ##
+
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
+
+    ##
+    # Gzip Settings
+    ##
+
+    gzip on;
+}
+
+include /etc/nginx/conf.d/*.conf;
+include /etc/nginx/sites-enabled/*;
+",
+}
+
+# Restart Nginx service after configuration changes
+service { 'nginx':
+  ensure    => 'running',
+  enable    => true,
+  subscribe => File['/etc/nginx/nginx.conf'],
 }

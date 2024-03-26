@@ -1,15 +1,17 @@
-#!/usr/bin/env bash
-# This script gracefully reloads Gunicorn without downtime
+#!/bin/bash
 
-echo "Before Reload:"
-pgrep -f '[g]unicorn'
+# Identify Gunicorn processes
+gunicorn_processes=$(ps auxf | grep gunicorn | grep -v grep | awk '{print $2}')
 
-# Gracefully reload Gunicorn by sending a HUP signal to the master
-pkill -HUP -f '[g]unicorn'
-
-echo "After Reload:"
-if pgrep -f '[g]unicorn' > /dev/null; then
-    echo "OK"
-else
-    echo "Reload Failed"
+if [ -z "$gunicorn_processes" ]; then
+    echo "No Gunicorn processes found."
+    exit 1
 fi
+
+# Send graceful restart signal to master process
+for pid in $gunicorn_processes; do
+    echo "Sending graceful restart signal to Gunicorn master process with PID $pid..."
+    kill -s SIGUSR2 "$pid"
+done
+
+echo "Gunicorn workers are being gracefully restarted."
